@@ -188,94 +188,94 @@ class EnhancedResumeAnalyzer:
             analysis_prompts = {
                 'career_trajectory': {
                     'prompt': """Analyze the career trajectory based on the provided resume data:
-                    1. Career progression pattern
-                    - Outline sequential job titles and duration in each role
-                    - Note any promotions or lateral moves within organizations
+                            1. Career progression pattern
+        - Track job titles and promotions timeline
+        - Note major role transitions
 
-                    2. Key achievements and milestones
-                    - List major projects completed with quantifiable results
-                    - Highlight significant awards or recognition received
+        2. Key achievements
+        - List quantified accomplishments
+        - Highlight awards received
 
-                    3. Industry transitions and adaptability
-                    - Identify shifts between different industries or sectors
-                    - Note successful adaptation to new technologies or methodologies
+        3. Industry transitions
+        - Document industry changes
+        - Note adaptation success
 
-                    4. Leadership growth
-                    - Document progression in team management responsibilities
-                    - Track growth in project leadership scope and impact
+        4. Leadership growth
+        - Track team size managed
+        - Note scope of responsibility
 
-                    5. Future career potential
-                    - Assess alignment with industry trends and growth areas
-                    - Identify potential next career steps based on current trajectory""",
-                    'timeout': 45.0
+        5. Future potential
+        - Identify next career move
+        - Assess growth opportunities""",
+        'timeout': 45.0
                 },
                 'skills_analysis': {
                     'prompt': """Analyze the technical and professional skills:
-                    1. Core technical competencies
-                    - List primary technical skills with proficiency levels
-                    - Highlight specialized tools and technologies mastered
+        1. Core competencies
+        - List main technical skills
+        - Note proficiency levels
 
-                    2. Skill relevance to current market
-                    - Compare skills against current job market demands
-                    - Identify most valuable skills for target roles
+        2. Market relevance
+        - Match skills to job requirements
+        - Identify high-demand abilities
 
-                    3. Skill gaps and improvement areas
-                    - Note missing critical skills for desired positions
-                    - Suggest specific certifications or training needed
+        3. Skill gaps
+        - List missing critical skills
+        - Suggest needed certifications
 
-                    4. Industry-specific expertise
-                    - Detail knowledge of industry-specific processes
-                    - Highlight relevant domain expertise
+        4. Industry expertise
+        - Note specialized knowledge
+        - List domain experience
 
-                    5. Transferable skills
-                    - List soft skills applicable across industries
-                    - Identify universal technical competencies""",
+        5. Transferable skills
+        - Identify cross-industry skills
+        - List universal abilities""",
                     'timeout': 45.0
                 },
                 'resume_optimization': {
-                    'prompt': """Provide specific recommendations for optimization:
-                    1. Content improvement opportunities
-                    - Identify sections needing stronger achievement metrics
-                    - Suggest areas requiring more detailed examples
+                    'prompt': """Optimization recommendations:
+        1. Content improvements
+        - Add missing metrics
+        - Strengthen examples
 
-                    2. Achievement quantification
-                    - Add specific numbers to key accomplishments
-                    - Include project scope and team size details
+        2. Quantification
+        - Add specific numbers
+        - Include scope details
 
-                    3. Key selling points enhancement
-                    - Highlight unique skills or experiences
-                    - Emphasize leadership and innovation examples
+        3. Key selling points
+        - Highlight unique skills
+        - Emphasize achievements
 
-                    4. Format and structure suggestions
-                    - Recommend layout improvements for readability
-                    - Suggest better organization of information
+        4. Format suggestions
+        - Improve readability
+        - Enhance organization
 
-                    5. ATS optimization tips
-                    - List key keywords for target roles
-                    - Suggest format adjustments for ATS scanning""",
+        5. ATS optimization
+        - Add relevant keywords
+        - Adjust formatting""",
                     'timeout': 45.0
                 },
                 'action_plan': {
-                    'prompt': """Create a detailed action plan:
-                    1. Short-term goals (0-6 months)
-                    - List immediate skill development priorities
-                    - Outline networking targets and events
+                    'prompt': """Action plan:
+        1. Short-term goals
+        - List 3-month priorities
+        - Set immediate targets
 
-                    2. Medium-term goals (6-18 months)
-                    - Define career advancement milestones
-                    - Plan specific certification completions
+        2. Medium-term goals
+        - Define 1-year objectives
+        - Plan major milestones
 
-                    3. Skill development priorities
-                    - Identify top skills to acquire or improve
-                    - List relevant training resources
+        3. Skill priorities
+        - List skills to acquire
+        - Identify resources
 
-                    4. Networking strategies
-                    - Target specific industry events and groups
-                    - Plan informational interview objectives
+        4. Networking
+        - Target key events
+        - Plan connections
 
-                    5. Career advancement steps
-                    - Define clear promotion or role change goals
-                    - List specific companies or positions to target""",
+        5. Career steps
+        - Set promotion goals
+        - List target companies""",
                     'timeout': 45.0
                 }
             }
