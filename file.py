@@ -1,14 +1,12 @@
-# file.py
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
-from typing import Dict
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Dict, Any  # Added typing imports
 import os
 import asyncio
 import traceback
-from datetime import datetime  # Added datetime import
+from datetime import datetime
 from main import EnhancedResumeAnalyzer
-
-from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize FastAPI app
 app = FastAPI(title="Resume Analyzer API", description="Analyze resumes and extract actionable insights.")
@@ -16,13 +14,13 @@ app = FastAPI(title="Resume Analyzer API", description="Analyze resumes and extr
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Update with your frontend's origin
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Initialize the EnhancedResumeAnalyzer with better error handling
+# Initialize analyzer with better error handling
 try:
     mistral_api_key = os.getenv("MISTRAL_API_KEY")
     if not mistral_api_key:
@@ -32,11 +30,8 @@ except Exception as e:
     print(f"Error initializing EnhancedResumeAnalyzer: {str(e)}")
     raise
 
-# (Rest of your existing code remains unchanged)
-
-
 @app.post("/analyze")
-async def analyze_resume(file: UploadFile):
+async def analyze_resume(file: UploadFile) -> Dict[str, Any]:
     """Endpoint to analyze a resume PDF with improved error handling and timestamp tracking"""
     if file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
