@@ -302,8 +302,9 @@ class EnhancedResumeAnalyzer:
         except Exception as e:
             print(f"Error in AI analysis: {str(e)}\n{traceback.format_exc()}")
             raise
+            
+    async def get_ai_analysis(self, resume_content: Dict[str, Any]) -> Dict[str, Any]:
 
-    async def analyze_resume(self, pdf_path: str) -> Dict[str, any]:
         """Perform comprehensive resume analysis with detailed insights."""
         try:
             # Read and process PDF
