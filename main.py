@@ -2,28 +2,18 @@ import os
 from mistralai import Mistral, SystemMessage, UserMessage
 import PyPDF2
 from io import BytesIO
-import spacy
-from typing import Dict, List, Tuple, Optional
-import asyncio
 import re
-from datetime import datetime  # Added datetime import
+from datetime import datetime
 import json
 from collections import defaultdict
+import asyncio
 import traceback
 
 
 class EnhancedResumeAnalyzer:
     def __init__(self, mistral_api_key: str):
-        """Initialize the Enhanced Resume Analyzer with comprehensive analysis capabilities."""
+        """Initialize the Enhanced Resume Analyzer with lightweight analysis capabilities."""
         self.client = Mistral(api_key=mistral_api_key)
-
-        # Load spaCy model with error handling and progress feedback
-        try:
-            self.nlp = spacy.load("en_core_web_lg")
-        except OSError:
-            print("Downloading spaCy model... This might take a few minutes.")
-            os.system("python -m spacy download en_core_web_lg")
-            self.nlp = spacy.load("en_core_web_lg")
 
         # Expanded skill categories for more detailed analysis
         self.skill_categories = {
@@ -66,16 +56,12 @@ class EnhancedResumeAnalyzer:
     def extract_text_from_pdf(self, pdf_content: bytes) -> str:
         """Extract and clean text from PDF with enhanced formatting preservation."""
         try:
-            # Create BytesIO object from the bytes content
             pdf_file = BytesIO(pdf_content)
             reader = PyPDF2.PdfReader(pdf_file)
 
-            # Enhanced text extraction with formatting preservation
             text_blocks = []
             for page in reader.pages:
                 text = page.extract_text()
-
-                # Preserve section breaks and formatting
                 text = re.sub(r'(\r\n|\r|\n)\s*(\r\n|\r|\n)', '\n\n', text)
                 text = re.sub(r'\s{2,}', ' ', text)
                 text_blocks.append(text.strip())
@@ -85,7 +71,7 @@ class EnhancedResumeAnalyzer:
             print(f"Error extracting PDF content: {e}")
             raise
 
-    def identify_section(self, text: str) -> Optional[str]:
+    def identify_section(self, text: str) -> str:
         """Identify resume section based on pattern matching."""
         text_lower = text.lower()
         for section, patterns in self.section_patterns.items():
@@ -93,68 +79,23 @@ class EnhancedResumeAnalyzer:
                 return section
         return None
 
-    def extract_dates(self, text: str) -> List[Tuple[str, str]]:
-        """Extract date ranges from text with improved pattern matching."""
-        date_patterns = [
-            r'((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|'
-            r'Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|'
-            r'Dec(?:ember)?)[,]?\s+\d{4})\s*(?:-|–|to)\s*(Present|Current|(?:Jan(?:uary)?|'
-            r'Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|'
-            r'Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)[,]?\s+\d{4})',
-            r'(\d{4})\s*(?:-|–|to)\s*(Present|Current|\d{4})'
-        ]
+    def count_sentences(self, text: str) -> int:
+        """Simple sentence counter using regular expressions."""
+        return len(re.split(r'[.!?]+', text))
 
-        dates = []
-        for pattern in date_patterns:
-            matches = re.finditer(pattern, text, re.IGNORECASE)
-            for match in matches:
-                start_date, end_date = match.groups()
-                dates.append((start_date.strip(), end_date.strip()))
-        return dates
-
-    def extract_metrics(self, text: str) -> Dict[str, List[str]]:
-        """Extract and categorize quantifiable achievements."""
-        metrics = defaultdict(list)
-
-        patterns = {
-            'improvements': [
-                r'(?:increased|improved|enhanced|grew|raised|boosted)\s+(?:by\s+)?(\d+[%+]|\$[\d,]+K?M?|[\d,]+\s+(?:percent|users|customers|clients|members|dollars|sales))',
-                r'(\d+[%+]|\$[\d,]+K?M?)\s+(?:increase|improvement|growth|boost|gain)'
-            ],
-            'reductions': [
-                r'(?:reduced|decreased|cut|lowered)\s+(?:by\s+)?(\d+[%+]|\$[\d,]+K?M?|[\d,]+\s+(?:percent|costs|expenses|time|hours))',
-                r'(\d+[%+]|\$[\d,]+K?M?)\s+(?:reduction|decrease|cut|savings)'
-            ],
-            'achievements': [
-                r'(?:achieved|accomplished|delivered|generated|produced|managed)\s+(?:revenue\s+of\s+)?(\$[\d,]+K?M?|\d+[%+]|\d+\s+(?:users|customers|projects|implementations))',
-                r'(?:led|supervised|managed|coordinated)\s+(?:team\s+of\s+)?(\d+\+?\s+(?:people|employees|members|developers))'
-            ]
-        }
-
-        for category, category_patterns in patterns.items():
-            for pattern in category_patterns:
-                matches = re.finditer(pattern, text, re.IGNORECASE)
-                metrics[category].extend(match.group(1) for match in matches)
-
-        return dict(metrics)
-
-    def categorize_skills(self, text: str) -> Dict[str, Dict[str, List[str]]]:
-        """Categorize skills with hierarchical classification."""
-        doc = self.nlp(text.lower())
+    def categorize_skills(self, text: str) -> dict:
+        """Categorize skills using regex pattern matching instead of spaCy."""
+        text_lower = text.lower()
         found_skills = defaultdict(lambda: defaultdict(set))
 
-        # Extract skills using NLP and pattern matching
         for main_category, subcategories in self.skill_categories.items():
             for subcategory, keywords in subcategories.items():
                 for keyword in keywords:
-                    if keyword in text.lower():
-                        # Find the complete phrase containing the keyword
-                        matches = re.finditer(
-                            rf'\b{keyword}\b(?:[,\s]+(?:\w+\s+){0, 3}\w+)*',
-                            text.lower()
-                        )
-                        for match in matches:
-                            found_skills[main_category][subcategory].add(match.group().strip())
+                    # Use word boundary to match whole words only
+                    pattern = rf'\b{re.escape(keyword)}\b(?:[,\s]+(?:\w+\s+){{0,3}}\w+)*'
+                    matches = re.finditer(pattern, text_lower)
+                    for match in matches:
+                        found_skills[main_category][subcategory].add(match.group().strip())
 
         # Convert sets to sorted lists for JSON serialization
         return {
@@ -165,25 +106,20 @@ class EnhancedResumeAnalyzer:
             for category, subcategories in found_skills.items()
         }
 
-    def process_resume_content(self, text: str) -> Dict[str, any]:
-        """Process resume content with enhanced section detection and analysis."""
+    def process_resume_content(self, text: str) -> dict:
+        """Process resume content with lightweight section detection and analysis."""
         sections = defaultdict(list)
         current_section = None
         section_text = []
 
-        # Split text into lines for processing
         lines = text.split('\n')
-
         for line in lines:
             line = line.strip()
             if not line:
                 continue
 
-            # Check if line is a section header
             detected_section = self.identify_section(line)
-
             if detected_section:
-                # Save previous section content
                 if current_section and section_text:
                     sections[current_section].append('\n'.join(section_text))
                     section_text = []
@@ -191,13 +127,11 @@ class EnhancedResumeAnalyzer:
             elif current_section:
                 section_text.append(line)
 
-        # Add last section
         if current_section and section_text:
             sections[current_section].append('\n'.join(section_text))
 
-        # Process sections for detailed analysis
         processed_content = {
-            'raw_text': text,  # Store complete resume text
+            'raw_text': text,
             'sections': dict(sections),
             'skills': self.categorize_skills(text),
             'metrics': self.extract_metrics(text),
@@ -205,13 +139,15 @@ class EnhancedResumeAnalyzer:
             'section_statistics': {
                 section: {
                     'word_count': len(' '.join(content).split()),
-                    'sentence_count': len(list(self.nlp(' '.join(content)).sents))
+                    'sentence_count': self.count_sentences(' '.join(content))
                 }
                 for section, content in sections.items()
             }
         }
 
         return processed_content
+
+    # Rest of the methods (extract_dates, extract_metrics, get_ai_analysis) remain the same
 
     # main.py - Updated get_ai_analysis method
     async def get_ai_analysis(self, resume_content: Dict[str, any]) -> Dict[str, str]:
