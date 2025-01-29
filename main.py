@@ -185,53 +185,103 @@ class EnhancedResumeAnalyzer:
                 'resume_optimization': '',
                 'action_plan': ''
             }
-
             analysis_prompts = {
                 'career_trajectory': {
-                    'prompt': """Analyze the career trajectory based on the provided resume data. Focus on:
+                    'prompt': """Analyze the career trajectory based on the provided resume data:
                     1. Career progression pattern
-                    2. Key achievements and milestones
-                    3. Industry transitions and adaptability
-                    4. Leadership growth
-                    5. Future career potential
+                    - Outline sequential job titles and duration in each role
+                    - Note any promotions or lateral moves within organizations
 
-                    Provide a detailed analysis with specific examples from the resume.""",
+                    2. Key achievements and milestones
+                    - List major projects completed with quantifiable results
+                    - Highlight significant awards or recognition received
+
+                    3. Industry transitions and adaptability
+                    - Identify shifts between different industries or sectors
+                    - Note successful adaptation to new technologies or methodologies
+
+                    4. Leadership growth
+                    - Document progression in team management responsibilities
+                    - Track growth in project leadership scope and impact
+
+                    5. Future career potential
+                    - Assess alignment with industry trends and growth areas
+                    - Identify potential next career steps based on current trajectory""",
                     'timeout': 45.0
                 },
                 'skills_analysis': {
-                    'prompt': """Analyze the technical and professional skills presented in the resume. Focus on:
+                    'prompt': """Analyze the technical and professional skills:
                     1. Core technical competencies
-                    2. Skill relevance to current market
-                    3. Skill gaps and improvement areas
-                    4. Industry-specific expertise
-                    5. Transferable skills
+                    - List primary technical skills with proficiency levels
+                    - Highlight specialized tools and technologies mastered
 
-                    Provide specific examples and market context for the analysis.""",
+                    2. Skill relevance to current market
+                    - Compare skills against current job market demands
+                    - Identify most valuable skills for target roles
+
+                    3. Skill gaps and improvement areas
+                    - Note missing critical skills for desired positions
+                    - Suggest specific certifications or training needed
+
+                    4. Industry-specific expertise
+                    - Detail knowledge of industry-specific processes
+                    - Highlight relevant domain expertise
+
+                    5. Transferable skills
+                    - List soft skills applicable across industries
+                    - Identify universal technical competencies""",
                     'timeout': 45.0
                 },
                 'resume_optimization': {
-                    'prompt': """Provide specific recommendations for resume optimization. Focus on:
+                    'prompt': """Provide specific recommendations for optimization:
                     1. Content improvement opportunities
-                    2. Achievement quantification
-                    3. Key selling points enhancement
-                    4. Format and structure suggestions
-                    5. ATS optimization tips
+                    - Identify sections needing stronger achievement metrics
+                    - Suggest areas requiring more detailed examples
 
-                    Offer actionable suggestions with examples.""",
+                    2. Achievement quantification
+                    - Add specific numbers to key accomplishments
+                    - Include project scope and team size details
+
+                    3. Key selling points enhancement
+                    - Highlight unique skills or experiences
+                    - Emphasize leadership and innovation examples
+
+                    4. Format and structure suggestions
+                    - Recommend layout improvements for readability
+                    - Suggest better organization of information
+
+                    5. ATS optimization tips
+                    - List key keywords for target roles
+                    - Suggest format adjustments for ATS scanning""",
                     'timeout': 45.0
                 },
                 'action_plan': {
-                    'prompt': """Create a detailed action plan for professional development. Include:
+                    'prompt': """Create a detailed action plan:
                     1. Short-term goals (0-6 months)
-                    2. Medium-term goals (6-18 months)
-                    3. Skill development priorities
-                    4. Networking strategies
-                    5. Career advancement steps
+                    - List immediate skill development priorities
+                    - Outline networking targets and events
 
-                    Provide specific, actionable steps with timelines.""",
+                    2. Medium-term goals (6-18 months)
+                    - Define career advancement milestones
+                    - Plan specific certification completions
+
+                    3. Skill development priorities
+                    - Identify top skills to acquire or improve
+                    - List relevant training resources
+
+                    4. Networking strategies
+                    - Target specific industry events and groups
+                    - Plan informational interview objectives
+
+                    5. Career advancement steps
+                    - Define clear promotion or role change goals
+                    - List specific companies or positions to target""",
                     'timeout': 45.0
                 }
             }
+
+
+
 
             for analysis_type, config in analysis_prompts.items():
                 max_retries = 2
