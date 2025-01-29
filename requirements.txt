@@ -3,3 +3,4 @@ uvicorn
 spacy
 PyPDF2
 mistralai
+python-multipart
