@@ -1,3 +1,4 @@
+# main.py
 import os
 from mistralai import Mistral, SystemMessage, UserMessage
 import PyPDF2
@@ -8,6 +9,7 @@ import json
 from collections import defaultdict
 import asyncio
 import traceback
+from typing import Dict, List, Tuple, Optional, Any 
 
 
 class EnhancedResumeAnalyzer:
@@ -150,7 +152,7 @@ class EnhancedResumeAnalyzer:
     # Rest of the methods (extract_dates, extract_metrics, get_ai_analysis) remain the same
 
     # main.py - Updated get_ai_analysis method
-    async def get_ai_analysis(self, resume_content: Dict[str, any]) -> Dict[str, str]:
+   async def get_ai_analysis(self, resume_content: Dict[str, Any]) -> Dict[str, Any]:
         """Generate comprehensive AI analysis with improved prompts for deeper insights"""
         try:
             if not resume_content or not isinstance(resume_content, dict):
