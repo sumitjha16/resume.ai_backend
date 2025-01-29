@@ -14,10 +14,17 @@ app = FastAPI(title="Resume Analyzer API", description="Analyze resumes and extr
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://resume-analyze-ai.netlify.app"],
+    allow_origins=[
+        "https://resume-analyze-ai.netlify.app",
+        "http://resume-analyze-ai.netlify.app",
+        "http://localhost:3000",  # If you're testing locally
+        "http://localhost:5173"   # For Vite's default port
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,  # Cache preflight requests for 10 minutes
 )
 
 # Initialize analyzer with better error handling
